@@ -6,6 +6,15 @@
     <title>Home Page</title>
   </head>
   <body>
-    <h1>Home Page</h1>
+    <h1>To Do List</h1>
+    <ul>
+      <% for(let todo of todos) { %>
+      <li>
+        <a href="/<%- todo.id %>"
+          ><%= todo.task %> due to: <%= todo.due %> (<%= todo.importance %>)</a
+        >
+      </li>
+      <% } %>
+    </ul>
   </body>
 </html>
