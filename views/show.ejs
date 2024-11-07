@@ -6,7 +6,8 @@
     <title>Show Todo</title>
   </head>
   <body>
-    <h1>The task you looking for:</h1>
+    <%- include("../partials/navbar") %>
+    <h3>The task you looking for:</h3>
     <ul>
       <li><b>Task: </b><%= findTodo.task %></li>
       <li><b>Due to: </b><%= findTodo.due %></li>

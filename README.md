@@ -17,3 +17,4 @@ This is a simple Todo application built with Express to practice RESTful routes.
 - **Body-parser**: Middleware to parse incoming request bodies
 - **Nodemon** (for development): Automatically restarts the server on file changes
 - **uuid**: Used for creating unique id's to todos
+- **Moment**: Used formatting due dates

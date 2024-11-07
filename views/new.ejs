@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New</title>
+  </head>
+  <body>
+    <%- include("../partials/navbar") %>
+    <form action="/" method="post">
+      <label for="task">Task:</label>
+      <input type="text" id="task" name="task" />
+      <label for="due">Due to:</label>
+      <input type="date" id="due" name="due" min="" />
+      <label for="importance">Importance:</label>
+      <select name="importance" id="importance">
+        <option value="normal">Normal</option>
+        <option value="important">Important</option>
+        <option value="urgent">Urgent</option>
+      </select>
+      <button>Save</button>
+    </form>
+
+    <script>
+      const today = new Date().toISOString().split("T")[0]
+      document.getElementById("due").setAttribute("min", today)
+    </script>
+  </body>
+</html>
