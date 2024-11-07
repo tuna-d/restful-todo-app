@@ -1,4 +1,5 @@
 const express = require("express")
+const methodOverride = require("method-override")
 const app = express()
 const port = 3000
 const path = require("path")
@@ -10,9 +11,10 @@ app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "/views"))
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded())
+app.use(bodyParser.urlencoded({ extended: true }))
 // parse application/json
 app.use(bodyParser.json())
+app.use(methodOverride("_method"))
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
@@ -22,13 +24,13 @@ let todos = [
   {
     id: uuidv4(),
     task: "shopping",
-    due: "friday",
+    due: "11-11-2024",
     importance: "normal",
   },
   {
     id: uuidv4(),
     task: "car wash",
-    due: "monday",
+    due: "21-11-2024",
     importance: "urgent",
   },
 ]
@@ -49,6 +51,13 @@ app.get("/:id", (req, res) => {
   }
 })
 
+app.get("/:id/edit", (req, res) => {
+  const { id } = req.params
+  const findTodo = todos.find((t) => t.id == id)
+  const valueDue = moment(findTodo.due, "DD-MM-YYYY").format("YYYY-MM-DD")
+  res.render("edit", { findTodo, valueDue })
+})
+
 app.post("/", (req, res) => {
   const { task, due, importance } = req.body
   if (task) {
@@ -62,4 +71,14 @@ app.post("/", (req, res) => {
   } else {
     res.render("new")
   }
+})
+
+app.patch("/:id", (req, res) => {
+  const { editTask, editDue, editImportance } = req.body
+  const { id } = req.params
+  const findTodo = todos.find((t) => t.id == id)
+  findTodo.task = editTask
+  findTodo.due = moment(editDue).format("DD-MM-YYYY")
+  findTodo.importance = editImportance
+  res.redirect("/")
 })
