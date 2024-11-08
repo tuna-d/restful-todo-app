@@ -14,7 +14,7 @@ This is a simple Todo application built with Express to practice RESTful routes.
 - **Express**: Web framework for Node.js
 - **EJS**: Embedded JavaScript templates for server-side rendering
 - **Tailwind CSS** (via CDN): Utility-first CSS framework for styling
-- **Body-parser**: Middleware to parse incoming request bodies
-- **Nodemon** (for development): Automatically restarts the server on file changes
-- **uuid**: Used for creating unique id's to todos
+- **Body-parser**: Middleware for parsing incoming request bodies
+- **Nodemon** (for development): Automatically restarts the server when file changes
+- **uuid**: Used to creating unique id's to todos
 - **Moment**: Used for formatting due dates

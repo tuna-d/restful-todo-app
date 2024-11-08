@@ -23,15 +23,9 @@ app.listen(port, () => {
 let todos = [
   {
     id: uuidv4(),
-    task: "shopping",
-    due: "11-11-2024",
+    task: "You can create and edit tasks.",
+    due: "24-03-2024",
     importance: "normal",
-  },
-  {
-    id: uuidv4(),
-    task: "car wash",
-    due: "21-11-2024",
-    importance: "urgent",
   },
 ]
 
@@ -80,5 +74,11 @@ app.patch("/:id", (req, res) => {
   findTodo.task = editTask
   findTodo.due = moment(editDue).format("DD-MM-YYYY")
   findTodo.importance = editImportance
+  res.redirect("/")
+})
+
+app.delete("/:id", (req, res) => {
+  const { id } = req.params
+  todos = todos.filter((t) => t.id != id)
   res.redirect("/")
 })
