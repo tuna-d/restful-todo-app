@@ -4,23 +4,46 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <script src="/js/bootstrap.min.js"></script>
   </head>
   <body>
     <%- include("../partials/navbar") %>
-    <form action="/" method="post">
-      <label for="task">Task:</label>
-      <input type="text" id="task" name="task" />
-      <label for="due">Due to:</label>
-      <input type="date" id="due" name="due" min="" />
-      <label for="importance">Importance:</label>
-      <select name="importance" id="importance">
-        <option value="normal">Normal</option>
-        <option value="important">Important</option>
-        <option value="urgent">Urgent</option>
-      </select>
-      <button>Save</button>
-    </form>
-
+    <div class="container-lg mt-2">
+      <div class="border border-primary-subtle p-2 rounded">
+        <form action="/" method="post">
+          <div class="d-sm-flex mb-4">
+            <div id="task" class="flex-grow-1">
+              <label for="task" class="form-label fs-5 mt-2">Task:</label>
+              <input class="form-control" type="text" id="task" name="task" />
+            </div>
+            <div class="ms-sm-4">
+              <label for="due" class="form-label fs-5 mt-2">Due to:</label>
+              <input
+                class="form-control"
+                type="date"
+                id="due"
+                name="due"
+                min=""
+              />
+            </div>
+            <div id="imp" class="ms-sm-4">
+              <label for="importance" class="form-label fs-5 mt-2"
+                >Importance:</label
+              >
+              <select class="form-select" name="importance" id="importance">
+                <option value="normal" class="bg-info-subtle">Normal</option>
+                <option value="important" class="bg-warning-subtle">
+                  Important
+                </option>
+                <option value="urgent" class="bg-danger-subtle">Urgent</option>
+              </select>
+            </div>
+          </div>
+          <input class="btn btn-primary btn-lg" type="submit" value="Save" />
+        </form>
+      </div>
+    </div>
     <script>
       const today = new Date().toISOString().split("T")[0]
       document.getElementById("due").setAttribute("min", today)

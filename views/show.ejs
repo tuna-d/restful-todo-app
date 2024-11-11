@@ -4,19 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Show Todo</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <script src="/js/bootstrap.min.js"></script>
   </head>
   <body>
     <%- include("../partials/navbar") %>
-    <h3>The task you looking for:</h3>
-    <ul>
-      <li><b>Task: </b><%= findTodo.task %></li>
-      <li><b>Due to: </b><%= findTodo.due %></li>
-      <li><b>Importance: </b><%= findTodo.importance%></li>
-    </ul>
-    <a href="/<%- findTodo.id %>/edit">Edit</a>
-    <form action="/<%= findTodo.id %>?_method=DELETE" method="POST">
-      <button>Delete</button>
-    </form>
-    <a href="/">Back</a>
+    <div class="container-lg">
+      <div class="mt-2 border border-primary-subtle p-2 rounded">
+        <h3>The task you looking for:</h3>
+        <ul class="fs-5">
+          <li><b>Task: </b><%= findTodo.task %></li>
+          <li><b>Due to: </b><%= findTodo.due %></li>
+          <li class="text-capitalize">
+            <b>Importance: </b><%= findTodo.importance%>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="/<%- findTodo.id %>/edit" class="text-decoration-none me-2"
+            ><button class="btn btn-outline-primary">Edit</button></a
+          >
+
+          <form action="/<%= findTodo.id %>?_method=DELETE" method="POST">
+            <button class="btn btn-outline-danger me-2">Delete</button>
+          </form>
+
+          <a href="/" class="text-decoration-none"
+            ><button class="btn btn-outline-dark me-2">Back</button></a
+          >
+        </div>
+      </div>
+    </div>
   </body>
 </html>

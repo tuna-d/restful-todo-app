@@ -4,17 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home Page</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <script src="/js/bootstrap.min.js"></script>
   </head>
   <body>
     <%- include("../partials/navbar") %>
-    <ul>
-      <% for(let todo of todos) { %>
-      <li>
-        <a href="/<%- todo.id %>"
-          ><%= todo.task %> due to: <%= todo.due %> (<%= todo.importance %>)</a
-        >
-      </li>
-      <% } %>
-    </ul>
+    <div class="container-lg pt-2">
+      <div class="list-group">
+        <% for(let todo of todos) { %>
+        <a
+          class="list-group-item list-group-item-action text-wrap text-break mb-2 shadow-sm rounded <%- todo.importance %>"
+          href="/<%- todo.id %>"
+          ><p class="fs-4"><%= todo.task %></p>
+
+          <% if(todo.due) { %>
+             <p> Due to: <%= todo.due %> (<%= todo.importance %>)</p>
+            <%} else { %>
+              <p>Date is not specified. (<%= todo.importance %>)</p>
+              <% } %>
+            </a>
+        <% } %>
+      </div>
+    </div>
+    <script src="/js/change-color.js"></script>
   </body>
 </html>

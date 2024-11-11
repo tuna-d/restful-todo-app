@@ -16,6 +16,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(methodOverride("_method"))
 
+app.use(express.static(path.join(__dirname, "public")))
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
 })
@@ -24,7 +26,7 @@ let todos = [
   {
     id: uuidv4(),
     task: "You can create and edit tasks.",
-    due: "24-03-2024",
+    due: "24.03.2024",
     importance: "normal",
   },
 ]
@@ -48,20 +50,26 @@ app.get("/:id", (req, res) => {
 app.get("/:id/edit", (req, res) => {
   const { id } = req.params
   const findTodo = todos.find((t) => t.id == id)
-  const valueDue = moment(findTodo.due, "DD-MM-YYYY").format("YYYY-MM-DD")
+  const valueDue = moment(findTodo.due, "DD.MM.YYYY").format("YYYY.MM.DD")
   res.render("edit", { findTodo, valueDue })
 })
 
 app.post("/", (req, res) => {
   const { task, due, importance } = req.body
-  if (task) {
+  if (task && due) {
     todos.push({
       id: uuidv4(),
       task: task,
-      due: moment(due).format("DD-MM-YYYY"),
+      due: moment(due).format("DD.MM.YYYY"),
       importance: importance,
     })
     res.redirect("/")
+  } else if (task) {
+    todos.push({
+      id: uuidv4(),
+      task: task,
+      importance: importance,
+    })
   } else {
     res.render("new")
   }
@@ -72,7 +80,7 @@ app.patch("/:id", (req, res) => {
   const { id } = req.params
   const findTodo = todos.find((t) => t.id == id)
   findTodo.task = editTask
-  findTodo.due = moment(editDue).format("DD-MM-YYYY")
+  editDue ? findTodo.due = moment(editDue).format("DD.MM.YYYY") : findTodo.due = ""
   findTodo.importance = editImportance
   res.redirect("/")
 })
