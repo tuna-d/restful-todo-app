@@ -42,13 +42,28 @@
                 class="form-select"
                 name="editImportance"
                 id="importance"
-                value="<%= findTodo.importance%>"
               >
-                <option value="normal" class="bg-info-subtle">Normal</option>
+              <% if(findTodo.importance == "normal") { %>
+                <option value="normal" class="bg-info-subtle" selected>Normal</option>
                 <option value="important" class="bg-warning-subtle">
-                  Important
+                 Important
                 </option>
                 <option value="urgent" class="bg-danger-subtle">Urgent</option>
+
+              <% } else if(findTodo.importance == "important") { %>
+                  <option value="normal" class="bg-info-subtle">Normal</option>
+                  <option value="important" class="bg-warning-subtle" selected>
+                    Important
+                  </option>
+                  <option value="urgent" class="bg-danger-subtle">Urgent</option>
+
+                <% }else if(findTodo.importance == "urgent") { %>
+                  <option value="normal" class="bg-info-subtle">Normal</option>
+                  <option value="important" class="bg-warning-subtle">
+                    Important
+                  </option>
+                  <option value="urgent" class="bg-danger-subtle" selected>Urgent</option>
+                <% } %>
               </select>
             </div>
           </div>
@@ -63,3 +78,4 @@
     </script>
   </body>
 </html>
+

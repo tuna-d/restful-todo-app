@@ -50,7 +50,7 @@ app.get("/:id", (req, res) => {
 app.get("/:id/edit", (req, res) => {
   const { id } = req.params
   const findTodo = todos.find((t) => t.id == id)
-  const valueDue = moment(findTodo.due, "DD.MM.YYYY").format("YYYY.MM.DD")
+  const valueDue = moment(findTodo.due, "DD.MM.YYYY").format("YYYY-MM-DD")
   res.render("edit", { findTodo, valueDue })
 })
 
