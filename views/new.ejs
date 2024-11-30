@@ -32,11 +32,9 @@
                 >Importance:</label
               >
               <select class="form-select" name="importance" id="importance">
-                <option value="normal" class="bg-info-subtle">Normal</option>
-                <option value="important" class="bg-warning-subtle">
-                  Important
-                </option>
-                <option value="urgent" class="bg-danger-subtle">Urgent</option>
+                <% for(let imp of importanceCat) {%>
+                <option value="<%= imp %>"><%= imp %></option>
+                <% } %>
               </select>
             </div>
           </div>

@@ -11,7 +11,7 @@
     <%- include("../partials/navbar") %>
     <div class="container-lg mt-2">
       <div class="border border-primary-subtle p-2 rounded">
-        <form action="/<%= findTodo.id %>?_method=PATCH" method="post">
+        <form action="/<%- findTodo.id %>?_method=PUT" method="post">
           <div class="d-sm-flex mb-4">
             <div id="task" class="flex-grow-1 fs-5 mt-2">
               <label for="task" class="form-label">Task:</label>
@@ -38,31 +38,9 @@
               <label for="importance" class="form-label fs-5 mt-2"
                 >Importance:</label
               >
-              <select
-                class="form-select"
-                name="editImportance"
-                id="importance"
-              >
-              <% if(findTodo.importance == "normal") { %>
-                <option value="normal" class="bg-info-subtle" selected>Normal</option>
-                <option value="important" class="bg-warning-subtle">
-                 Important
-                </option>
-                <option value="urgent" class="bg-danger-subtle">Urgent</option>
-
-              <% } else if(findTodo.importance == "important") { %>
-                  <option value="normal" class="bg-info-subtle">Normal</option>
-                  <option value="important" class="bg-warning-subtle" selected>
-                    Important
-                  </option>
-                  <option value="urgent" class="bg-danger-subtle">Urgent</option>
-
-                <% }else if(findTodo.importance == "urgent") { %>
-                  <option value="normal" class="bg-info-subtle">Normal</option>
-                  <option value="important" class="bg-warning-subtle">
-                    Important
-                  </option>
-                  <option value="urgent" class="bg-danger-subtle" selected>Urgent</option>
+              <select class="form-select" name="editImportance" id="importance">
+                <% for(let imp of importanceCat) {%>
+                <option value="<%= imp %>" <%= findTodo.importance === imp ? "selected" : "" %>><%= imp %></option>
                 <% } %>
               </select>
             </div>
@@ -79,3 +57,29 @@
   </body>
 </html>
 
+<!--                 <% if(findTodo.importance == "normal") { %>
+                <option value="normal" class="bg-info-subtle" selected>
+                  Normal
+                </option>
+                <option value="important" class="bg-warning-subtle">
+                  Important
+                </option>
+                <option value="urgent" class="bg-danger-subtle">Urgent</option>
+
+                <% } else if(findTodo.importance == "important") { %>
+                <option value="normal" class="bg-info-subtle">Normal</option>
+                <option value="important" class="bg-warning-subtle" selected>
+                  Important
+                </option>
+                <option value="urgent" class="bg-danger-subtle">Urgent</option>
+
+                <% }else if(findTodo.importance == "urgent") { %>
+                <option value="normal" class="bg-info-subtle">Normal</option>
+                <option value="important" class="bg-warning-subtle">
+                  Important
+                </option>
+                <option value="urgent" class="bg-danger-subtle" selected>
+                  Urgent
+                </option>
+                <% } %>
+ -->

@@ -5,88 +5,151 @@ const port = 3000
 const path = require("path")
 const bodyParser = require("body-parser")
 const moment = require("moment")
-const { v4: uuidv4 } = require("uuid")
+const mongoose = require("mongoose")
+const Todo = require("./models/todo")
 
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "/views"))
 
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }))
-// parse application/json
 app.use(bodyParser.json())
 app.use(methodOverride("_method"))
-
 app.use(express.static(path.join(__dirname, "public")))
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017/todoApp")
+  .then(() => {
+    console.log("connected to the database")
+  })
+  .catch((err) => {
+    console.log("ERROR", err)
+  })
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
 })
 
-let todos = [
-  {
-    id: uuidv4(),
-    task: "You can create and edit tasks.",
-    due: "24.03.2024",
-    importance: "normal",
-  },
-]
+const importanceCat = ["Normal", "Important", "Urgent"]
 
-app.get("/", (req, res) => {
-  res.render("home", { todos })
+app.get("/", async (req, res) => {
+  try {
+    const todos = await Todo.find()
+    res.render("home", { todos })
+  } catch (error) {
+    console.error("Error fetching todos:", error)
+    res.status(500).send("Internal Server Error")
+  }
 })
 
 app.get("/new", (req, res) => {
-  res.render("new")
-})
-
-app.get("/:id", (req, res) => {
-  const { id } = req.params
-  const findTodo = todos.find((t) => t.id == id)
-  if (findTodo) {
-    res.render("show", { findTodo })
+  try {
+    res.render("new", { importanceCat })
+  } catch (error) {
+    console.error("Error rendering new todo form:", error)
+    res.status(500).send("Internal Server Error")
   }
 })
 
-app.get("/:id/edit", (req, res) => {
-  const { id } = req.params
-  const findTodo = todos.find((t) => t.id == id)
-  const valueDue = moment(findTodo.due, "DD.MM.YYYY").format("YYYY-MM-DD")
-  res.render("edit", { findTodo, valueDue })
-})
+app.post("/", async (req, res) => {
+  try {
+    const { task, due, importance } = req.body
 
-app.post("/", (req, res) => {
-  const { task, due, importance } = req.body
-  if (task && due) {
-    todos.push({
-      id: uuidv4(),
-      task: task,
-      due: moment(due).format("DD.MM.YYYY"),
-      importance: importance,
-    })
-    res.redirect("/")
-  } else if (task) {
-    todos.push({
-      id: uuidv4(),
-      task: task,
-      importance: importance,
-    })
-  } else {
-    res.render("new")
+    if (task && due) {
+      const newTodo = new Todo({
+        task: task,
+        due: moment(due).format("DD.MM.YYYY"),
+        importance: importance,
+      })
+      await newTodo.save()
+      res.redirect("/")
+    } else if (task) {
+      const newTodo = new Todo({
+        task: task,
+        importance: importance,
+      })
+      await newTodo.save()
+      res.redirect("/")
+    } else {
+      res.render("new", { importanceCat })
+    }
+  } catch (error) {
+    console.error("Error creating new todo:", error)
+    res.status(500).send("Internal Server Error")
   }
 })
 
-app.patch("/:id", (req, res) => {
-  const { editTask, editDue, editImportance } = req.body
-  const { id } = req.params
-  const findTodo = todos.find((t) => t.id == id)
-  findTodo.task = editTask
-  editDue ? findTodo.due = moment(editDue).format("DD.MM.YYYY") : findTodo.due = ""
-  findTodo.importance = editImportance
-  res.redirect("/")
+app.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const findTodo = await Todo.findById(id)
+
+    if (findTodo) {
+      res.render("show", { findTodo })
+    } else {
+      res.status(404).send("Todo not found")
+    }
+  } catch (error) {
+    console.error("Error fetching todo by ID:", error)
+    res.status(500).send("Internal Server Error")
+  }
 })
 
-app.delete("/:id", (req, res) => {
-  const { id } = req.params
-  todos = todos.filter((t) => t.id != id)
-  res.redirect("/")
+app.get("/:id/edit", async (req, res) => {
+  try {
+    const { id } = req.params
+    const findTodo = await Todo.findById(id)
+
+    if (findTodo) {
+      const valueDue = moment(findTodo.due, "DD.MM.YYYY").format("YYYY-MM-DD")
+      res.render("edit", { findTodo, valueDue, importanceCat })
+    } else {
+      res.status(404).send("Todo not found")
+    }
+  } catch (error) {
+    console.error("Error fetching todo for edit:", error)
+    res.status(500).send("Internal Server Error")
+  }
+})
+
+app.put("/:id", async (req, res) => {
+  try {
+    const { editTask, editDue, editImportance } = req.body
+    const { id } = req.params
+    const due = editDue ? moment(editDue).format("DD.MM.YYYY") : ""
+
+    const updatedTodo = await Todo.findByIdAndUpdate(
+      id,
+      {
+        task: editTask,
+        due: due,
+        importance: editImportance,
+      },
+      { runValidators: true, new: true }
+    )
+
+    if (updatedTodo) {
+      res.redirect("/")
+    } else {
+      res.status(404).send("Todo not found")
+    }
+  } catch (error) {
+    console.error("Error updating todo:", error)
+    res.status(500).send("Internal Server Error")
+  }
+})
+
+app.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const deletedTodo = await Todo.findByIdAndDelete(id)
+
+    if (deletedTodo) {
+      res.redirect("/")
+    } else {
+      res.status(404).send("Todo not found")
+    }
+  } catch (error) {
+    console.error("Error deleting todo:", error)
+    res.status(500).send("Internal Server Error")
+  }
 })
